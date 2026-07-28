@@ -762,7 +762,8 @@ point is visible."
 	   (not (equal pdf-keynav-point pdf-keynav-mark)))
       ;; display region
       (pdf-view-display-region
-       (list (pdf-keynav-get-region-rpos)))
+       (cons (pdf-view-current-page)
+             (list (pdf-keynav-get-region-rpos))))
     ;; else display cursor
     (let ((inrectangle
 	   (nth 1 (nth pdf-keynav-point pdf-keynav-charlayout)))
@@ -2204,7 +2205,8 @@ Puts mark at beginning of word and point at end, and displays region."
   (pdf-keynav-backward-word nil t)
   (pdf-keynav-exchange-point-and-mark t)
   (pdf-view-display-region
-   (list (pdf-keynav-get-region-rpos))))
+   (cons (pdf-view-current-page)
+         (list (pdf-keynav-get-region-rpos)))))
 
 
 (defun pdf-keynav-select-line ()
@@ -2219,7 +2221,8 @@ Puts mark at beginning of line and point at end, and displays region."
   (pdf-keynav-set-mark-command)
   (pdf-keynav-end-of-line t)
   (pdf-view-display-region
-   (list (pdf-keynav-get-region-rpos))))
+   (cons (pdf-view-current-page)
+         (list (pdf-keynav-get-region-rpos)))))
 
 
 (defun pdf-keynav-select-sentence ()
@@ -2235,7 +2238,8 @@ Puts mark at beginning of sentence and point at end, and displays region."
   (pdf-keynav-backward-sentence nil t)
   (pdf-keynav-exchange-point-and-mark t)
   (pdf-view-display-region
-   (list (pdf-keynav-get-region-rpos))))
+   (cons (pdf-view-current-page)
+         (list (pdf-keynav-get-region-rpos)))))
 
 
 (defun pdf-keynav-select-paragraph ()
@@ -2250,7 +2254,8 @@ Puts mark at beginning of paragraph and point at end, and displays region."
   (pdf-keynav-set-mark-command)
   (pdf-keynav-end-of-paragraph t)
   (pdf-view-display-region
-   (list (pdf-keynav-get-region-rpos))))
+   (cons (pdf-view-current-page)
+         (list (pdf-keynav-get-region-rpos)))))
 
 
 (defun pdf-keynav-select-page ()
@@ -2261,7 +2266,8 @@ Puts mark at beginning of page and point at end, and displays region."
   (pdf-keynav-set-mark-command)
   (pdf-keynav-end-of-page t)
   (pdf-view-display-region
-   (list (pdf-keynav-get-region-rpos))))
+   (cons (pdf-view-current-page)
+         (list (pdf-keynav-get-region-rpos)))))
 
 
 
@@ -2430,15 +2436,17 @@ Create a rectangular region, if RECTANGLE-P is non-nil."
                       (pdf-util-scale-pixel-to-relative iregion))
 		;;(message "region: %s" region)
                 (pdf-view-display-region
-                 (cons region pdf-view-active-region)
+                 (cons (pdf-view-current-page)
+                       (cons region (cdr pdf-view-active-region)))
                  rectangle-p)
                 (pdf-util-scroll-to-edges iregion)))))
 	;; end of if condition for mouse dragging
 	(progn
 	  ;; then part
 	  (setq pdf-view-active-region
-		(append pdf-view-active-region
-			(list region)))
+		(cons (pdf-view-current-page)
+		      (append (cdr pdf-view-active-region)
+			      (list region))))
 	  ;; set mark and point
 	  (setq pdf-keynav-mark
 		(pdf-keynav-relative-pos-to-ichar
@@ -2585,7 +2593,8 @@ the copied text. The display duration can be controlled using
 	(pdf-keynav-deactivate-mark)
       (when (> pdf-keynav-copy-region-blink-delay 0)
 	(pdf-view-display-region
-	 (list (pdf-keynav-get-region-rpos)))
+	 (cons (pdf-view-current-page)
+	       (list (pdf-keynav-get-region-rpos))))
 	(sit-for pdf-keynav-copy-region-blink-delay))
       (progn
 	(when pdf-keynav-pointer-as-cursor-minor-mode
@@ -2644,7 +2653,8 @@ This function is used as before advice to `pdf-view-active-region'."
 		'(pdf-keynav-mouse-extend-region
 		  pdf-view-mouse-set-region-rectangle))
     (setq pdf-view-active-region
-	  (list (pdf-keynav-get-region-rpos)))))
+	  (cons (pdf-view-current-page)
+		(list (pdf-keynav-get-region-rpos))))))
 
 (defun pdf-keynav-after-markup-advice (&rest _arg)
   "Deactivate region and display cursor."
