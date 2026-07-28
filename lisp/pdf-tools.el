@@ -83,6 +83,9 @@
 ;;   Jump from a position on a page directly to the TeX source and
 ;;   vice-versa.
 ;;
+;; * Keyboard navigation
+;;   Navigate pdf files using the keyboard like standard Emacs buffers.
+;;
 ;; * Misc
 ;;    + Display PDF's metadata.
 ;;    + Mark a region and kill the text from the PDF.
@@ -131,7 +134,8 @@ In order to customize dark and light colors use
     pdf-cache-prefetch-minor-mode
     pdf-view-auto-slice-minor-mode
     pdf-occur-global-minor-mode
-    pdf-virtual-global-minor-mode))
+    pdf-virtual-global-minor-mode
+    pdf-keynav-minor-mode))
 
 (defcustom pdf-tools-enabled-modes
   '(pdf-history-minor-mode
@@ -145,7 +149,9 @@ In order to customize dark and light colors use
     pdf-sync-minor-mode
     pdf-misc-context-menu-minor-mode
     pdf-cache-prefetch-minor-mode
-    pdf-occur-global-minor-mode)
+    pdf-occur-global-minor-mode
+    ;; pdf-keynav-minor-mode
+    )
   "A list of automatically enabled minor-modes.
 
 PDF Tools is build as a series of minor-modes.  This variable and
