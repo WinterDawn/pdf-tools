@@ -809,10 +809,13 @@ region to one line."
              (pdf-info-renderpage-highlight
               page width nil
               `(,(car colors) ,(cdr colors) 0.35 ,@region))
+           ;; 'glyph keeps the cursor an exact character rectangle; the
+           ;; selection-style argument did not exist pre-pdf-roll.
            (pdf-info-renderpage-text-regions
-            page width single-line-p nil
+            page width single-line-p 'glyph nil
             `(,(car colors) ,(cdr colors) ,@region)))
-       :width width))))
+       :width width)
+     page)))
 
 (defun pdf-keynav-display-pointer-as-cursor (region &optional rectangle-p
                                                     not-single-line-p)
